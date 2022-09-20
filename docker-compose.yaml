@@ -36,7 +36,7 @@ services:
       - monitoring
   node-application-monitoring-app:
     build:
-      context: ./
+      context: ./monitor-app
     ports:
       - 8080:8080
     expose:
