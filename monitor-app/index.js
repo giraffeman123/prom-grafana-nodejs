@@ -1,5 +1,6 @@
 var express = require('express');
 const requestIp = require('request-ip');
+const {getIpv4} = require('./ip.utils');
 var app = express();
 const {register,httpRequestDurationMicroseconds} = require('./monitor/monitor.app');
 
@@ -31,7 +32,8 @@ app.get('/monitor-app/binaryPermutation/:number', async(req,res) => {
     // Start the timer
     const end = httpRequestDurationMicroseconds.startTimer();
     const route = req.route.path;   
-    var clientIp = requestIp.getClientIp(req); 
+    var clientIp = getIpv4(requestIp.getClientIp(req)); 
+    var cleanIp = clientIp !== null ? clientIp : 'Ip Retrieval Error';        
     
     var number = parseInt(req.params.number);
     var paramStr = 'number='+number;    
@@ -42,7 +44,7 @@ app.get('/monitor-app/binaryPermutation/:number', async(req,res) => {
         res.status(200).json(binaryResult);
     }    
     // End timer and add labels        
-    end({ route, code: res.statusCode, method: req.method, parameters: paramStr, ipv4: clientIp });    
+    end({ route, code: res.statusCode, method: req.method, parameters: paramStr, clientIpv4: cleanIp });    
 });
 
 var binaryResult = [];
