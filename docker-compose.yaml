@@ -35,6 +35,7 @@ services:
     networks:
       - monitoring
   node-application-monitoring-app:
+    container_name: node-api
     build:
       context: ./monitor-app
     ports:
